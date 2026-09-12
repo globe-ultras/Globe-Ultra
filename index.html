@@ -1092,11 +1092,58 @@
   }
 
   @media (max-width:640px){
-    .header{ padding:20px; }
-    .header h1{ font-size:26px; }
+    /* ---- En-tête : plus compact, on masque le texte descriptif ---- */
+    .header{ padding:16px 16px 0; max-width:62vw; }
+    .header h1{ font-size:22px; }
+    .logo-mark{ width:38px; height:19px; }
+    .header .rule{ width:40px; margin-top:6px; }
+    .header p{ display:none; }
+
+    /* ---- Barre de recherche : sous l'en-tête, plus étroite ---- */
+    .search-wrap{ top:70px; }
+    .search-box{ width:min(260px, 60vw); padding:8px 12px; }
+    .search-box input{ font-size:12px; }
+
+    /* ---- Menus Championnats / Compétitions / Itinéraire : sous la recherche, plus compacts ---- */
+    .controls-right{
+      top:130px;
+      right:10px;
+      gap:6px;
+      max-width:46vw;
+    }
+    .filter-toggle{
+      padding:7px 10px;
+      font-size:11.5px;
+      gap:5px;
+    }
+    .filter-toggle .count-badge{ font-size:9px; padding:1px 5px; }
+    .filter-panel, .route-panel{
+      width:min(220px, 58vw);
+    }
+    .filter-row{ padding:7px 10px; font-size:11.5px; }
+
+    /* ---- Bouton QUIZ : plus discret pour ne pas gêner le globe ---- */
+    .quiz-toggle{ right:10px; gap:6px; }
+    .quiz-toggle .quiz-circle{ width:40px; height:40px; }
+    .quiz-toggle .quiz-circle svg{ width:16px; height:16px; }
+    .quiz-toggle .quiz-label{ font-size:11px; letter-spacing:1px; }
+
+    /* ---- Légende des pays : masquée pour laisser de la place au globe ---- */
     .legend{ display:none; }
     .hint{ display:none; }
-    .panel{ width:100%; max-width:100%; }
+
+    /* ---- Sélecteur de langue : plus petit, resserré ---- */
+    .lang-switch{ bottom:14px; right:14px; gap:4px; }
+    .lang-btn{ padding:5px 8px; font-size:10px; }
+
+    /* ---- Panneau détail stade : pleine largeur ---- */
+    .panel{ width:100%; max-width:100%; padding:24px 20px; }
+
+    /* ---- Cartes du quiz : marges réduites ---- */
+    .quiz-card{ padding:26px 20px; width:92vw; }
+
+    /* ---- Carte du tutoriel : un peu plus étroite pour rester lisible ---- */
+    .tutorial-card{ width:min(280px, 84vw); }
   }
 </style>
 </head>
