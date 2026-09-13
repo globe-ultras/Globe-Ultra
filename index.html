@@ -226,6 +226,94 @@
     opacity:0;
     pointer-events:none;
   }
+  .donate-btn{
+    position:fixed;
+    bottom:68px;
+    right:32px;
+    z-index:20;
+    display:flex;
+    align-items:center;
+    gap:8px;
+    padding:9px 16px;
+    border-radius:20px;
+    border:1px solid rgba(244,161,0,0.45);
+    background:rgba(244,161,0,0.12);
+    color:var(--amber);
+    font-family:'Bebas Neue', sans-serif;
+    font-size:14px;
+    letter-spacing:0.8px;
+    cursor:pointer;
+    pointer-events:auto;
+    transition:background 0.2s ease, transform 0.2s ease;
+  }
+  .donate-btn:hover{
+    background:rgba(244,161,0,0.22);
+    transform:translateY(-1px);
+  }
+  .donate-icon{ font-size:15px; }
+
+  .donate-modal{
+    position:fixed; inset:0;
+    z-index:170;
+    display:none;
+    align-items:center;
+    justify-content:center;
+    padding:24px;
+    background:rgba(3,7,16,0.72);
+    backdrop-filter:blur(4px);
+    -webkit-backdrop-filter:blur(4px);
+  }
+  .donate-modal.open{ display:flex; }
+  .donate-card{
+    position:relative;
+    width:100%;
+    max-width:380px;
+    text-align:center;
+    background:rgba(14,27,48,0.97);
+    border:1px solid rgba(244,161,0,0.3);
+    border-radius:20px;
+    padding:38px 30px 30px;
+    box-shadow:0 24px 60px rgba(0,0,0,0.55);
+  }
+  .donate-close{
+    position:absolute;
+    top:14px; right:14px;
+    width:30px; height:30px;
+    border-radius:50%;
+    border:1px solid rgba(255,255,255,0.18);
+    background:rgba(255,255,255,0.05);
+    color:var(--text-dim);
+    cursor:pointer;
+    font-size:12px;
+  }
+  .donate-close:hover{ color:var(--amber); border-color:rgba(244,161,0,0.4); }
+  .donate-icon-big{ font-size:42px; margin-bottom:10px; }
+  .donate-title{
+    font-family:'Bebas Neue', sans-serif;
+    font-size:24px;
+    letter-spacing:0.5px;
+    color:var(--text);
+    margin-bottom:12px;
+  }
+  .donate-text{
+    font-size:13.5px;
+    line-height:1.6;
+    color:var(--text-dim);
+    margin-bottom:24px;
+  }
+  .donate-confirm{
+    display:inline-block;
+    width:100%;
+    padding:13px;
+    border-radius:12px;
+    background:var(--amber);
+    color:#1a1200;
+    font-family:'Bebas Neue', sans-serif;
+    font-size:15px;
+    letter-spacing:1px;
+    text-decoration:none;
+    box-sizing:border-box;
+  }
   .lang-switch{
     position:fixed;
     bottom:26px;
@@ -1153,6 +1241,7 @@
     .hint{ display:none; }
 
     /* ---- Sélecteur de langue : plus petit, resserré ---- */
+    .donate-btn{ bottom:54px; right:14px; padding:7px 12px; font-size:12px; }
     .lang-switch{ bottom:14px; right:14px; gap:4px; }
     .lang-btn{ padding:5px 8px; font-size:10px; }
 
@@ -1203,6 +1292,21 @@
   </div>
   <div class="rule"></div>
   <p>Explorez les stades de première division à travers le monde. Faites glisser pour tourner, cliquez sur un point pour voir un stade.</p>
+</div>
+
+<button class="donate-btn" id="donate-btn">
+  <span class="donate-icon">☕</span>
+  <span data-i18n="donate_label">Soutenir le projet</span>
+</button>
+
+<div class="donate-modal" id="donate-modal">
+  <div class="donate-card">
+    <button class="donate-close" id="donate-close" aria-label="Fermer">&#10005;</button>
+    <div class="donate-icon-big">⚽</div>
+    <div class="donate-title" data-i18n="donate_title">Merci de passer par les tribunes !</div>
+    <div class="donate-text" data-i18n="donate_text">Chaque don, c'est un peu comme une passe décisive : ça fait avancer Globe Ultras vers le prochain but. Un immense merci pour votre soutien !</div>
+    <a class="donate-confirm" id="donate-confirm" href="https://ko-fi.com/globeultras" target="_blank" rel="noopener noreferrer" data-i18n="donate_confirm">Faire un don sur Ko-fi</a>
+  </div>
 </div>
 
 <div class="lang-switch" id="lang-switch">
@@ -1552,6 +1656,10 @@ const BALL_ICON = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAiUAAAIlCAYAAAA
 // Langues des 5 grands championnats couverts par le site.
 const I18N = {
 fr: {
+  donate_label:"Soutenir le projet",
+  donate_title:"Merci de passer par les tribunes !",
+  donate_text:"Chaque don, c'est un peu comme une passe décisive : ça fait avancer Globe Ultras vers le prochain but. Un immense merci pour votre soutien !",
+  donate_confirm:"Faire un don sur Ko-fi",
   word_back:"Retour", word_categories:"Catégories",
   championnats:"Championnats", competitions:"Compétitions", itineraire:"Itinéraire",
   tout:"Tout", depart:"Départ", arrivee:"Arrivée",
@@ -1607,6 +1715,10 @@ fr: {
   tutorial_skip:"Quitter le tutoriel"
 },
 en: {
+  donate_label:"Support the project",
+  donate_title:"Thanks for stepping into the stands!",
+  donate_text:"A donation is like a perfect assist — it helps push Globe Ultras toward the next goal. Thank you so much for your support!",
+  donate_confirm:"Donate on Ko-fi",
   word_back:"Back", word_categories:"Categories",
   championnats:"Leagues", competitions:"Competitions", itineraire:"Route",
   tout:"All", depart:"From", arrivee:"To",
@@ -1662,6 +1774,10 @@ en: {
   tutorial_skip:"Skip tutorial"
 },
 it: {
+  donate_label:"Sostieni il progetto",
+  donate_title:"Grazie per essere sceso in tribuna!",
+  donate_text:"Una donazione è come un assist perfetto: aiuta Globe Ultras a segnare il prossimo gol. Grazie di cuore per il tuo sostegno!",
+  donate_confirm:"Fai una donazione su Ko-fi",
   word_back:"Indietro", word_categories:"Categorie",
   championnats:"Campionati", competitions:"Competizioni", itineraire:"Itinerario",
   tout:"Tutti", depart:"Partenza", arrivee:"Arrivo",
@@ -1717,6 +1833,10 @@ it: {
   tutorial_skip:"Salta il tutorial"
 },
 es: {
+  donate_label:"Apoya el proyecto",
+  donate_title:"¡Gracias por pasar por la grada!",
+  donate_text:"Una donación es como una asistencia perfecta: ayuda a Globe Ultras a acercarse al próximo gol. ¡Muchísimas gracias por tu apoyo!",
+  donate_confirm:"Donar en Ko-fi",
   word_back:"Volver", word_categories:"Categorías",
   championnats:"Ligas", competitions:"Competiciones", itineraire:"Ruta",
   tout:"Todos", depart:"Salida", arrivee:"Llegada",
@@ -1772,6 +1892,10 @@ es: {
   tutorial_skip:"Saltar el tutorial"
 },
 de: {
+  donate_label:"Projekt unterstützen",
+  donate_title:"Danke, dass du auf die Tribüne kommst!",
+  donate_text:"Eine Spende ist wie eine perfekte Vorlage: Sie bringt Globe Ultras dem nächsten Tor näher. Vielen Dank für deine Unterstützung!",
+  donate_confirm:"Auf Ko-fi spenden",
   word_back:"Zurück", word_categories:"Kategorien",
   championnats:"Ligen", competitions:"Wettbewerbe", itineraire:"Route",
   tout:"Alle", depart:"Start", arrivee:"Ziel",
@@ -3396,6 +3520,23 @@ function setLanguage(lang){
 document.querySelectorAll('.lang-btn').forEach(btn => {
   btn.addEventListener('click', () => setLanguage(btn.getAttribute('data-lang')));
 });
+
+// ================= BOUTON DE DON ==================
+(function(){
+  const donateBtn = document.getElementById('donate-btn');
+  const donateModal = document.getElementById('donate-modal');
+  const donateClose = document.getElementById('donate-close');
+
+  donateBtn.addEventListener('click', () => {
+    donateModal.classList.add('open');
+  });
+  donateClose.addEventListener('click', () => {
+    donateModal.classList.remove('open');
+  });
+  donateModal.addEventListener('click', (e) => {
+    if(e.target === donateModal) donateModal.classList.remove('open');
+  });
+})();
 
 translatePage();
 </script>
