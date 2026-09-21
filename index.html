@@ -1057,11 +1057,13 @@
   .cluster-item .cp-dot{
     width:8px; height:8px; border-radius:50%; flex-shrink:0;
   }
-  .cluster-item .cp-name{ flex:1; }
+  .cluster-item .cp-name{ flex:1; min-width:0; overflow-wrap:break-word; word-break:break-word; }
   .cluster-item .cp-city{
     font-size:10.5px;
     color:var(--text-dim);
     margin-top:2px;
+    overflow-wrap:break-word;
+    word-break:break-word;
   }
 
   .panel{
@@ -1215,6 +1217,9 @@
     .logo-mark{ width:38px; height:19px; }
     .header .rule{ width:40px; margin-top:6px; }
     .header p{ display:none; }
+
+    /* ---- Liste des stades superposés : centrée, largeur limitée ---- */
+    .cluster-picker{ width:min(280px, 84vw); max-width:84vw; }
 
     /* ---- Barre de recherche : sous l'en-tête, plus étroite ---- */
     .search-wrap{ top:70px; }
@@ -2451,15 +2456,27 @@ function showClusterPicker(markerList, clientX, clientY){
     clusterPickerEl.appendChild(item);
   });
 
+  const isMobile = window.innerWidth <= 640;
   const w = 250;
   const h = Math.min(280, 40 + markerList.length * 52);
-  let left = clientX + 14;
-  let top = clientY - 10;
-  if(left + w > window.innerWidth - 10) left = clientX - w - 14;
-  if(top + h > window.innerHeight - 10) top = window.innerHeight - h - 10;
-  if(top < 10) top = 10;
-  clusterPickerEl.style.left = left + 'px';
-  clusterPickerEl.style.top = top + 'px';
+
+  if(isMobile){
+    // Sur petit écran, on centre la liste au milieu de l'écran plutôt que
+    // de la positionner près du point cliqué, pour que le nom des stades
+    // et des villes reste entièrement lisible.
+    clusterPickerEl.style.left = '50%';
+    clusterPickerEl.style.top = '50%';
+    clusterPickerEl.style.transform = 'translate(-50%, -50%)';
+  } else {
+    let left = clientX + 14;
+    let top = clientY - 10;
+    if(left + w > window.innerWidth - 10) left = clientX - w - 14;
+    if(top + h > window.innerHeight - 10) top = window.innerHeight - h - 10;
+    if(top < 10) top = 10;
+    clusterPickerEl.style.left = left + 'px';
+    clusterPickerEl.style.top = top + 'px';
+    clusterPickerEl.style.transform = 'none';
+  }
   clusterPickerEl.classList.add('open');
 }
 
