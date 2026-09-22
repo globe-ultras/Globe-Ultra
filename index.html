@@ -1586,6 +1586,43 @@ const BALL_ICON = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAiUAAAIlCAYAAAA
       ctx.fillStyle = '#CE1124';
       ctx.fillRect(x0, y0 + h/2 - h*0.16, w, h*0.32);
       ctx.fillRect(x0 + w/2 - w*0.16, y0, w*0.32, h);
+    } else if(code === 'be'){
+      ctx.fillStyle = '#000000'; ctx.fillRect(x0, y0, w/3, h);
+      ctx.fillStyle = '#FDDA24'; ctx.fillRect(x0 + w/3, y0, w/3, h);
+      ctx.fillStyle = '#EF3340'; ctx.fillRect(x0 + 2*w/3, y0, w/3, h);
+    } else if(code === 'pt'){
+      ctx.fillStyle = '#046A38'; ctx.fillRect(x0, y0, w*0.4, h);
+      ctx.fillStyle = '#DA291C'; ctx.fillRect(x0 + w*0.4, y0, w*0.6, h);
+    } else if(code === 'ch'){
+      ctx.fillStyle = '#DA291C'; ctx.fillRect(x0, y0, w, h);
+      ctx.fillStyle = '#FFFFFF';
+      ctx.fillRect(x0 + w/2 - w*0.09, y0 + h*0.2, w*0.18, h*0.6);
+      ctx.fillRect(x0 + w*0.2, y0 + h/2 - h*0.09, w*0.6, h*0.18);
+    } else if(code === 'ma'){
+      ctx.fillStyle = '#C1272D'; ctx.fillRect(x0, y0, w, h);
+      ctx.strokeStyle = '#006233'; ctx.lineWidth = Math.max(1, w*0.03);
+      const cx = x0 + w/2, cy = y0 + h/2, r = h*0.28;
+      ctx.beginPath();
+      for(let i=0;i<5;i++){
+        const a1 = -Math.PI/2 + i*2*Math.PI/5;
+        const a2 = a1 + 4*Math.PI/5;
+        const x1 = cx + r*Math.cos(a1), y1 = cy + r*Math.sin(a1);
+        const x2 = cx + r*Math.cos(a2), y2 = cy + r*Math.sin(a2);
+        if(i===0) ctx.moveTo(x1,y1); else ctx.lineTo(x1,y1);
+        ctx.lineTo(x2,y2);
+      }
+      ctx.closePath();
+      ctx.stroke();
+    } else if(code === 'dz'){
+      ctx.fillStyle = '#006233'; ctx.fillRect(x0, y0, w/2, h);
+      ctx.fillStyle = '#FFFFFF'; ctx.fillRect(x0 + w/2, y0, w/2, h);
+      ctx.fillStyle = '#D21034';
+      const cx = x0 + w/2, cy = y0 + h/2, r = h*0.22;
+      ctx.beginPath();
+      ctx.arc(cx, cy, r, Math.PI*0.15, Math.PI*1.55);
+      ctx.arc(cx + r*0.35, cy, r*0.78, Math.PI*1.55, Math.PI*0.15, true);
+      ctx.closePath();
+      ctx.fill();
     }
   }
 
@@ -1674,6 +1711,7 @@ fr: {
   donate_title:"Merci de passer par les tribunes !",
   donate_text:"Chaque don, c'est un peu comme une passe décisive : ça fait avancer Globe Ultras vers le prochain but. Un immense merci pour votre soutien !",
   donate_confirm:"Faire un don sur Ko-fi",
+  see_stadiums:"Voir les stades",
   word_back:"Retour", word_categories:"Catégories",
   championnats:"Championnats", competitions:"Compétitions", itineraire:"Itinéraire",
   tout:"Tout", depart:"Départ", arrivee:"Arrivée",
@@ -1733,6 +1771,7 @@ en: {
   donate_title:"Thanks for stepping into the stands!",
   donate_text:"A donation is like a perfect assist — it helps push Globe Ultras toward the next goal. Thank you so much for your support!",
   donate_confirm:"Donate on Ko-fi",
+  see_stadiums:"See the stadiums",
   word_back:"Back", word_categories:"Categories",
   championnats:"Leagues", competitions:"Competitions", itineraire:"Route",
   tout:"All", depart:"From", arrivee:"To",
@@ -1792,6 +1831,7 @@ it: {
   donate_title:"Grazie per essere sceso in tribuna!",
   donate_text:"Una donazione è come un assist perfetto: aiuta Globe Ultras a segnare il prossimo gol. Grazie di cuore per il tuo sostegno!",
   donate_confirm:"Fai una donazione su Ko-fi",
+  see_stadiums:"Vedi gli stadi",
   word_back:"Indietro", word_categories:"Categorie",
   championnats:"Campionati", competitions:"Competizioni", itineraire:"Itinerario",
   tout:"Tutti", depart:"Partenza", arrivee:"Arrivo",
@@ -1851,6 +1891,7 @@ es: {
   donate_title:"¡Gracias por pasar por la grada!",
   donate_text:"Una donación es como una asistencia perfecta: ayuda a Globe Ultras a acercarse al próximo gol. ¡Muchísimas gracias por tu apoyo!",
   donate_confirm:"Donar en Ko-fi",
+  see_stadiums:"Ver los estadios",
   word_back:"Volver", word_categories:"Categorías",
   championnats:"Ligas", competitions:"Competiciones", itineraire:"Ruta",
   tout:"Todos", depart:"Salida", arrivee:"Llegada",
@@ -1910,6 +1951,7 @@ de: {
   donate_title:"Danke, dass du auf die Tribüne kommst!",
   donate_text:"Eine Spende ist wie eine perfekte Vorlage: Sie bringt Globe Ultras dem nächsten Tor näher. Vielen Dank für deine Unterstützung!",
   donate_confirm:"Auf Ko-fi spenden",
+  see_stadiums:"Stadien anzeigen",
   word_back:"Zurück", word_categories:"Kategorien",
   championnats:"Ligen", competitions:"Wettbewerbe", itineraire:"Route",
   tout:"Alle", depart:"Start", arrivee:"Ziel",
@@ -1974,6 +2016,9 @@ const COUNTRY_I18N = {
   'Italie': {fr:'Italie', en:'Italy', it:'Italia', es:'Italia', de:'Italien'},
   'Portugal': {fr:'Portugal', en:'Portugal', it:'Portogallo', es:'Portugal', de:'Portugal'},
   'Belgique': {fr:'Belgique', en:'Belgium', it:'Belgio', es:'Bélgica', de:'Belgien'},
+  'Suisse': {fr:'Suisse', en:'Switzerland', it:'Svizzera', es:'Suiza', de:'Schweiz'},
+  'Maroc': {fr:'Maroc', en:'Morocco', it:'Marocco', es:'Marruecos', de:'Marokko'},
+  'Algérie': {fr:'Algérie', en:'Algeria', it:'Algeria', es:'Argelia', de:'Algerien'},
   'Pays-Bas': {fr:'Pays-Bas', en:'Netherlands', it:'Paesi Bassi', es:'Países Bajos', de:'Niederlande'},
   'Norvège': {fr:'Norvège', en:'Norway', it:'Norvegia', es:'Noruega', de:'Norwegen'},
   'Ukraine': {fr:'Ukraine', en:'Ukraine', it:'Ucraina', es:'Ucrania', de:'Ukraine'},
@@ -2097,12 +2142,95 @@ const STADIUMS = [
   { name:"Bluenergy Stadium", city:"Udine", country:"Italie", flag:"country-it", lat:46.0805, lon:13.2035, capacity:25132, built:1976, league:"Serie A", desc:"Domicile de l'Udinese Calcio, dans le Frioul." },
   { name:"Stadio Pier Luigi Penzo", city:"Venise", country:"Italie", flag:"country-it", lat:45.4108, lon:12.3567, capacity:11150, built:1913, league:"Serie A", desc:"Stade du Venezia FC, l'un des rares au monde accessibles uniquement à pied ou en bateau." },
 
+  // --- Jupiler Pro League (Belgique) ---
+  { name:"Stade Constant Vanden Stock", city:"Anderlecht (Bruxelles)", country:"Belgique", flag:"country-be", lat:50.8342, lon:4.3226, capacity:21500, built:1917, league:"Jupiler Pro League", desc:"Domicile historique du Sporting d'Anderlecht, le club le plus titré de Belgique." },
+  { name:"Bosuilstadion", city:"Anvers", country:"Belgique", flag:"country-be", lat:51.2278, lon:4.4711, capacity:16144, built:1923, league:"Jupiler Pro League", desc:"Stade du Royal Antwerp, doyen du football belge, connu pour son ambiance populaire." },
+  { name:"Jan Breydel Stadion", city:"Bruges", country:"Belgique", flag:"country-be", lat:51.1954, lon:3.1806, capacity:29042, built:1975, league:"Jupiler Pro League", desc:"Stade partagé avec le Club Bruges, domicile du Cercle Bruges dans la ville historique des Flandres." },
+  { name:"Stade du Pays de Charleroi", city:"Charleroi", country:"Belgique", flag:"country-be", lat:50.4108, lon:4.4247, capacity:14000, built:1939, league:"Jupiler Pro League", desc:"Enceinte du Sporting de Charleroi, en Wallonie, régulièrement modernisée." },
+  { name:"Jan Breydel Stadion", city:"Bruges", country:"Belgique", flag:"country-be", lat:51.1954, lon:3.1806, capacity:29042, built:1975, league:"Jupiler Pro League", desc:"Domicile du Club Bruges, l'un des clubs les plus titrés de Belgique.", competitions:["cl2627"] },
+  { name:"Van Roystadion", city:"Denderleeuw", country:"Belgique", flag:"country-be", lat:50.8886, lon:4.0761, capacity:6429, built:1954, league:"Jupiler Pro League", desc:"Stade du FCV Dender EH, club promu en première division belge." },
+  { name:"Cegeka Arena", city:"Genk", country:"Belgique", flag:"country-be", lat:50.9764, lon:5.4756, capacity:24956, built:1999, league:"Jupiler Pro League", desc:"Domicile du Racing Genk, dans le Limbourg belge, réputé pour la formation de jeunes talents." },
+  { name:"Ghelamco Arena", city:"Gand", country:"Belgique", flag:"country-be", lat:51.027, lon:3.7681, capacity:20000, built:2013, league:"Jupiler Pro League", desc:"Stade moderne de La Gantoise, situé aux abords de la ville flamande." },
+  { name:"Stade du Tivoli", city:"La Louvière", country:"Belgique", flag:"country-be", lat:50.4664, lon:4.1858, capacity:8050, built:1976, league:"Jupiler Pro League", desc:"Stade du RAAL La Louvière, qui retrouve l'élite du football belge." },
+  { name:"AFAS-stadion Achter de Kazerne", city:"Malines", country:"Belgique", flag:"country-be", lat:51.0181, lon:4.4644, capacity:16700, built:1922, league:"Jupiler Pro League", desc:"Domicile du KV Mechelen, club emblématique de la province d'Anvers." },
+  { name:"Den Dreef", city:"Louvain", country:"Belgique", flag:"country-be", lat:50.8683, lon:4.6997, capacity:10000, built:1961, league:"Jupiler Pro League", desc:"Stade d'Oud-Heverlee Louvain, dans la ville universitaire du Brabant flamand." },
+  { name:"Stayen", city:"Saint-Trond", country:"Belgique", flag:"country-be", lat:50.8166, lon:5.1864, capacity:14600, built:1965, league:"Jupiler Pro League", desc:"Domicile du Sint-Truidense VV, dans le Limbourg belge." },
+  { name:"Stade Maurice Dufrasne", city:"Liège", country:"Belgique", flag:"country-be", lat:50.6058, lon:5.5442, capacity:30023, built:1909, league:"Jupiler Pro League", desc:"Stade du Standard de Liège, situé dans le quartier de Sclessin au bord de la Meuse." },
+  { name:"Stade Joseph Marien", city:"Forest (Bruxelles)", country:"Belgique", flag:"country-be", lat:50.8155, lon:4.3183, capacity:9400, built:1919, league:"Jupiler Pro League", desc:"Domicile de l'Union Saint-Gilloise, club bruxellois au riche passé retrouvé au sommet du football belge.", competitions:["cl2627"] },
+  { name:"Het Kuipje", city:"Westerlo", country:"Belgique", flag:"country-be", lat:51.0917, lon:4.9169, capacity:8035, built:1997, league:"Jupiler Pro League", desc:"Stade du KVC Westerlo, dans la province d'Anvers." },
+  { name:"Regenboogstadion", city:"Waregem", country:"Belgique", flag:"country-be", lat:50.8892, lon:3.4272, capacity:12500, built:1996, league:"Jupiler Pro League", desc:"Domicile du Zulte Waregem, de retour parmi l'élite du football belge." },
+
+  // --- Liga Portugal Betclic (Portugal) ---
+  { name:"Complexo Desportivo do FC Alverca", city:"Alverca do Ribatejo", country:"Portugal", flag:"country-pt", lat:38.885, lon:-9.0392, capacity:6900, built:2006, league:"Liga Portugal Betclic", desc:"Stade du FC Alverca, promu en première division portugaise." },
+  { name:"Estádio Municipal de Arouca", city:"Arouca", country:"Portugal", flag:"country-pt", lat:40.933, lon:-8.25, capacity:5600, built:2003, league:"Liga Portugal Betclic", desc:"Domicile du FC Arouca, dans le nord du Portugal." },
+  { name:"Estádio do CD Aves", city:"Vila das Aves", country:"Portugal", flag:"country-pt", lat:41.3667, lon:-8.4667, capacity:6230, built:1939, league:"Liga Portugal Betclic", desc:"Stade de l'AVS Futebol SAD, dans le district de Porto." },
+  { name:"Estádio da Luz", city:"Lisbonne", country:"Portugal", flag:"country-pt", lat:38.7527, lon:-9.1846, capacity:68100, built:2003, league:"Liga Portugal Betclic", desc:"Domicile du Benfica, l'un des trois clubs historiques du Portugal, réputé pour son immense capacité.", competitions:["cl2627"] },
+  { name:"Estádio Municipal de Braga", city:"Braga", country:"Portugal", flag:"country-pt", lat:41.5661, lon:-8.416, capacity:30286, built:2003, league:"Liga Portugal Betclic", desc:"Stade du Sporting Braga, spectaculairement construit à flanc de carrière pour l'Euro 2004." },
+  { name:"Estádio Municipal de Rio Maior", city:"Rio Maior", country:"Portugal", flag:"country-pt", lat:39.3383, lon:-8.9392, capacity:7000, built:2004, league:"Liga Portugal Betclic", desc:"Domicile provisoire du Casa Pia, club historique de Lisbonne." },
+  { name:"Estádio António Coimbra da Mota", city:"Estoril", country:"Portugal", flag:"country-pt", lat:38.7167, lon:-9.3958, capacity:5094, built:1936, league:"Liga Portugal Betclic", desc:"Stade du GD Estoril Praia, sur la côte atlantique près de Lisbonne." },
+  { name:"Estádio José Gomes", city:"Amadora", country:"Portugal", flag:"country-pt", lat:38.7539, lon:-9.2286, capacity:9288, built:1956, league:"Liga Portugal Betclic", desc:"Domicile de l'Estrela da Amadora, dans la banlieue de Lisbonne." },
+  { name:"Estádio Municipal 22 de Junho", city:"Vila Nova de Famalicão", country:"Portugal", flag:"country-pt", lat:41.4083, lon:-8.5178, capacity:5186, built:2001, league:"Liga Portugal Betclic", desc:"Stade du FC Famalicão, dans le nord du Portugal." },
+  { name:"Estádio Cidade de Barcelos", city:"Barcelos", country:"Portugal", flag:"country-pt", lat:41.5386, lon:-8.6153, capacity:12046, built:2003, league:"Liga Portugal Betclic", desc:"Domicile du Gil Vicente FC, dans la région du Minho." },
+  { name:"Estádio Comendador Joaquim de Almeida Freitas", city:"Moreira de Cónegos", country:"Portugal", flag:"country-pt", lat:41.3667, lon:-8.367, capacity:6150, built:2001, league:"Liga Portugal Betclic", desc:"Stade du Moreirense FC, près de Guimarães." },
+  { name:"Estádio da Madeira", city:"Funchal", country:"Portugal", flag:"country-pt", lat:32.6669, lon:-16.9241, capacity:5200, built:2001, league:"Liga Portugal Betclic", desc:"Domicile du CD Nacional, sur l'archipel de Madère." },
+  { name:"Estádio do Dragão", city:"Porto", country:"Portugal", flag:"country-pt", lat:41.1618, lon:-8.5832, capacity:50033, built:2003, league:"Liga Portugal Betclic", desc:"Stade du FC Porto, construit pour l'Euro 2004 à l'emplacement de l'ancien Estádio das Antas.", competitions:["cl2627"] },
+  { name:"Estádio dos Arcos", city:"Vila do Conde", country:"Portugal", flag:"country-pt", lat:41.3525, lon:-8.7419, capacity:5300, built:2001, league:"Liga Portugal Betclic", desc:"Domicile du Rio Ave FC, sur la côte nord du Portugal." },
+  { name:"Estádio de São Miguel", city:"Ponta Delgada", country:"Portugal", flag:"country-pt", lat:37.75, lon:-25.6667, capacity:12500, built:1953, league:"Liga Portugal Betclic", desc:"Stade du CD Santa Clara, dans l'archipel des Açores, en plein océan Atlantique." },
+  { name:"Estádio José Alvalade", city:"Lisbonne", country:"Portugal", flag:"country-pt", lat:38.7607, lon:-9.1607, capacity:52095, built:2003, league:"Liga Portugal Betclic", desc:"Domicile du Sporting Clube de Portugal, dans le nord de Lisbonne.", competitions:["cl2627"] },
+  { name:"Estádio João Cardoso", city:"Tondela", country:"Portugal", flag:"country-pt", lat:40.5167, lon:-8.0833, capacity:5000, built:1985, league:"Liga Portugal Betclic", desc:"Stade du CD Tondela, dans le centre du Portugal." },
+  { name:"Estádio D. Afonso Henriques", city:"Guimarães", country:"Portugal", flag:"country-pt", lat:41.4486, lon:-8.2986, capacity:30029, built:2003, league:"Liga Portugal Betclic", desc:"Domicile du Vitória SC, dans la ville considérée comme le berceau du Portugal." },
+
+  // --- Super League Suisse (Suisse) ---
+  { name:"St. Jakob-Park", city:"Bâle", country:"Suisse", flag:"country-ch", lat:47.541, lon:7.6205, capacity:38512, built:2001, league:"Super League Suisse", desc:"Stade du FC Bâle, le plus grand de Suisse, club le plus titré du pays." },
+  { name:"Stade de Suisse Wankdorf", city:"Berne", country:"Suisse", flag:"country-ch", lat:46.9631, lon:7.4644, capacity:31500, built:2005, league:"Super League Suisse", desc:"Domicile des Young Boys de Berne, dans la capitale fédérale." },
+  { name:"Stade de Genève", city:"Genève", country:"Suisse", flag:"country-ch", lat:46.1783, lon:6.1108, capacity:30084, built:2003, league:"Super League Suisse", desc:"Stade du Servette FC, doyen des clubs suisses encore en activité." },
+  { name:"Letzigrund", city:"Zurich", country:"Suisse", flag:"country-ch", lat:47.3781, lon:8.5042, capacity:26104, built:2007, league:"Super League Suisse", desc:"Stade partagé par le FC Zurich et le Grasshopper Club, dans la plus grande ville de Suisse." },
+  { name:"Letzigrund", city:"Zurich", country:"Suisse", flag:"country-ch", lat:47.3781, lon:8.5042, capacity:26104, built:2007, league:"Super League Suisse", desc:"Stade partagé avec le FC Zurich, domicile du club le plus titré de Suisse." },
+  { name:"Kybunpark", city:"Saint-Gall", country:"Suisse", flag:"country-ch", lat:47.4306, lon:9.3181, capacity:20660, built:2008, league:"Super League Suisse", desc:"Domicile du FC Saint-Gall, réputé pour l'une des meilleures ambiances de Suisse." },
+  { name:"Swissporarena", city:"Lucerne", country:"Suisse", flag:"country-ch", lat:47.0447, lon:8.3106, capacity:16800, built:2011, league:"Super League Suisse", desc:"Stade du FC Lucerne, au bord du lac des Quatre-Cantons." },
+  { name:"Stade Tourbillon", city:"Sion", country:"Suisse", flag:"country-ch", lat:46.2333, lon:7.3667, capacity:14283, built:1968, league:"Super League Suisse", desc:"Domicile du FC Sion, dans la vallée du Rhône, en Valais." },
+  { name:"Stade de la Tuilière", city:"Lausanne", country:"Suisse", flag:"country-ch", lat:46.5378, lon:6.6117, capacity:12544, built:2020, league:"Super League Suisse", desc:"Stade moderne du FC Lausanne-Sport, inauguré en 2020." },
+  { name:"Stockhorn Arena", city:"Thoune", country:"Suisse", flag:"country-ch", lat:46.7639, lon:7.6178, capacity:10398, built:2011, league:"Super League Suisse", desc:"Domicile du FC Thoune, au pied des Alpes bernoises." },
+  { name:"Stade de Cornaredo", city:"Lugano", country:"Suisse", flag:"country-ch", lat:46.0236, lon:8.9617, capacity:6330, built:1951, league:"Super League Suisse", desc:"Stade du FC Lugano, dans le canton italophone du Tessin." },
+  { name:"Stadion Schützenwiese", city:"Winterthour", country:"Suisse", flag:"country-ch", lat:47.4931, lon:8.7444, capacity:8550, built:1959, league:"Super League Suisse", desc:"Domicile du FC Winterthour, l'un des clubs historiques du football suisse." },
+  // --- Botola Pro (Maroc) ---
+  { name:"Stade Prince Moulay Abdellah", city:"Rabat", country:"Maroc", flag:"country-ma", lat:34.0002, lon:-6.8306, capacity:69000, built:1983, league:"Botola Pro", desc:"Domicile de l'AS FAR, club de l'armée royale marocaine." },
+  { name:"Stade d'Honneur", city:"Meknès", country:"Maroc", flag:"country-ma", lat:33.8825, lon:-5.5497, capacity:20000, built:1962, league:"Botola Pro", desc:"Stade du Chabab de Mecknès, dans la ville impériale." },
+  { name:"Stade Ben M'Hamed El Abdi", city:"El Jadida", country:"Maroc", flag:"country-ma", lat:33.2394, lon:-8.4956, capacity:10000, built:1962, league:"Botola Pro", desc:"Domicile du Difaâ Hassani El Jadidi, sur la côte atlantique." },
+  { name:"Stade Moulay Hassan", city:"Rabat", country:"Maroc", flag:"country-ma", lat:34.0122, lon:-6.8386, capacity:22000, built:1923, league:"Botola Pro", desc:"Stade du Fath Union Sport, l'un des plus anciens clubs de Rabat." },
+  { name:"Stade Adrar", city:"Agadir", country:"Maroc", flag:"country-ma", lat:30.3931, lon:-9.5711, capacity:45480, built:2013, league:"Botola Pro", desc:"Domicile de la Hassania d'Agadir, sur la côte sud atlantique." },
+  { name:"Stade Ibn Batouta", city:"Tanger", country:"Maroc", flag:"country-ma", lat:35.7392, lon:-5.8794, capacity:75000, built:2011, league:"Botola Pro", desc:"Stade de l'Ittihad Riadi de Tanger, en face du détroit de Gibraltar." },
+  { name:"Complexe Sportif de Fès", city:"Fès", country:"Maroc", flag:"country-ma", lat:34.0181, lon:-5.0289, capacity:45000, built:2007, league:"Botola Pro", desc:"Domicile du Maghreb Athletic de Fès, dans la ville impériale." },
+  { name:"Stade de Marrakech", city:"Marrakech", country:"Maroc", flag:"country-ma", lat:31.5931, lon:-8.0189, capacity:45240, built:2011, league:"Botola Pro", desc:"Stade du Kawkab Athletic Club, promu en Botola Pro." },
+  { name:"Stade El Massira", city:"Safi", country:"Maroc", flag:"country-ma", lat:32.2833, lon:-9.2167, capacity:10000, built:1972, league:"Botola Pro", desc:"Domicile de l'Olympique de Safi, sur la côte atlantique." },
+  { name:"Stade Adrar", city:"Dcheira El Jihadia", country:"Maroc", flag:"country-ma", lat:30.3833, lon:-9.5333, capacity:45480, built:2013, league:"Botola Pro", desc:"Stade de l'Olympique Dcheira, promu en Botola Pro, dans l'agglomération d'Agadir." },
+  { name:"Stade Mohammed V", city:"Casablanca", country:"Maroc", flag:"country-ma", lat:33.5722, lon:-7.6461, capacity:45891, built:1955, league:"Botola Pro", desc:"Domicile du Raja Club Athletic, l'un des clubs les plus populaires du Maroc." },
+  { name:"Stade Ahmed Choukri", city:"Zemamra", country:"Maroc", flag:"country-ma", lat:32.6167, lon:-8.7, capacity:2500, built:1980, league:"Botola Pro", desc:"Stade du Rapide Club Athlétique de Zemamra." },
+  { name:"Stade Municipal de Berkane", city:"Berkane", country:"Maroc", flag:"country-ma", lat:34.9218, lon:-2.3212, capacity:15000, built:1975, league:"Botola Pro", desc:"Domicile de la Renaissance Sportive de Berkane, dans l'Oriental marocain." },
+  { name:"Stade Olympique de Rabat", city:"Rabat", country:"Maroc", flag:"country-ma", lat:34.0089, lon:-6.8481, capacity:21000, built:1983, league:"Botola Pro", desc:"Stade de l'Union Sportive Yacoub El Mansour, promue en Botola Pro." },
+  { name:"Stade Al Medina", city:"Rabat", country:"Maroc", flag:"country-ma", lat:34.0306, lon:-6.8319, capacity:18000, built:1990, league:"Botola Pro", desc:"Domicile de l'Union Touarga Sport, dans la banlieue de Rabat." },
+  { name:"Stade Mohammed V", city:"Casablanca", country:"Maroc", flag:"country-ma", lat:33.5722, lon:-7.6461, capacity:45891, built:1955, league:"Botola Pro", desc:"Stade partagé avec le Raja, domicile du Wydad Athletic Club, le club le plus titré du Maroc." },
+
+  // --- Ligue 1 (Algérie) ---
+  { name:"Stade Mohamed Boumezrag", city:"Chlef", country:"Algérie", flag:"country-dz", lat:36.165, lon:1.3347, capacity:18000, built:1972, league:"Ligue 1 Algérie", desc:"Domicile de l'ASO Chlef, dans le nord-ouest de l'Algérie." },
+  { name:"Stade Nelson Mandela", city:"Alger", country:"Algérie", flag:"country-dz", lat:36.7, lon:3.1167, capacity:40000, built:2022, league:"Ligue 1 Algérie", desc:"Stade moderne du Chabab Riadhi de Belouizdad, dans la capitale algérienne." },
+  { name:"Stade Chahid Hamlaoui", city:"Constantine", country:"Algérie", flag:"country-dz", lat:36.365, lon:6.6147, capacity:22968, built:1973, league:"Ligue 1 Algérie", desc:"Domicile du CS Constantine, dans l'est de l'Algérie." },
+  { name:"Stade du 20 Août 1955", city:"Alger", country:"Algérie", flag:"country-dz", lat:36.755, lon:3.0083, capacity:10000, built:1972, league:"Ligue 1 Algérie", desc:"Stade de l'ES Ben Aknoun, promu en Ligue 1 algérienne." },
+  { name:"Stade Mohamed Bensaïd", city:"Mostaganem", country:"Algérie", flag:"country-dz", lat:35.9315, lon:0.0892, capacity:18000, built:1985, league:"Ligue 1 Algérie", desc:"Domicile de l'ES Mostaganem, sur la côte méditerranéenne." },
+  { name:"Stade 8 Mai 1945", city:"Sétif", country:"Algérie", flag:"country-dz", lat:36.1898, lon:5.4108, capacity:25000, built:1975, league:"Ligue 1 Algérie", desc:"Stade de l'Entente Sportive de Sétif, l'un des clubs les plus titrés d'Algérie." },
+  { name:"Stade Hocine Aït Ahmed", city:"Tizi Ouzou", country:"Algérie", flag:"country-dz", lat:36.7169, lon:4.0497, capacity:50766, built:1974, league:"Ligue 1 Algérie", desc:"Domicile de la JS Kabylie, dans les montagnes du Djurdjura." },
+  { name:"Stade du 20 Août 1955", city:"Béchar", country:"Algérie", flag:"country-dz", lat:31.6167, lon:-2.2167, capacity:20000, built:2016, league:"Ligue 1 Algérie", desc:"Stade de la JS Saoura, dans le grand sud-ouest algérien." },
+  { name:"Stade du 18 Février", city:"Rouissat", country:"Algérie", flag:"country-dz", lat:31.9167, lon:5.3333, capacity:18000, built:2018, league:"Ligue 1 Algérie", desc:"Domicile du MB Rouissat, promu en Ligue 1, près d'Ouargla." },
+  { name:"Stade Ali La Pointe", city:"Alger", country:"Algérie", flag:"country-dz", lat:36.7538, lon:3.0588, capacity:40000, built:2023, league:"Ligue 1 Algérie", desc:"Stade du Mouloudia Club d'Alger, l'un des clubs historiques du pays." },
+  { name:"Stade Zakaria Medjdoub", city:"El Bayadh", country:"Algérie", flag:"country-dz", lat:33.6836, lon:1.0206, capacity:15000, built:1985, league:"Ligue 1 Algérie", desc:"Domicile du MC El Bayadh, dans les hauts plateaux algériens." },
+  { name:"Stade Miloud Hadefi", city:"Oran", country:"Algérie", flag:"country-dz", lat:35.6969, lon:-0.6331, capacity:40143, built:2019, league:"Ligue 1 Algérie", desc:"Stade du MC Oran, dans l'ouest de l'Algérie." },
+  { name:"Stade de l'Unité Maghrébine", city:"Akbou", country:"Algérie", flag:"country-dz", lat:36.45, lon:4.5333, capacity:17500, built:1980, league:"Ligue 1 Algérie", desc:"Domicile de l'Olympique Akbou, en Kabylie." },
+  { name:"Stade du 20 Août 1955", city:"Alger", country:"Algérie", flag:"country-dz", lat:36.755, lon:3.0083, capacity:10000, built:1972, league:"Ligue 1 Algérie", desc:"Stade du Paradou AC, réputé pour la formation de jeunes joueurs." },
+  { name:"Stade du 5 Juillet 1962", city:"Alger", country:"Algérie", flag:"country-dz", lat:36.7178, lon:3.1503, capacity:64000, built:1972, league:"Ligue 1 Algérie", desc:"Stade du USM Alger, la plus grande enceinte du pays." },
+  { name:"Stade Amar Hamam", city:"Khenchela", country:"Algérie", flag:"country-dz", lat:35.43, lon:7.1433, capacity:8000, built:1985, league:"Ligue 1 Algérie", desc:"Domicile de l'USM Khenchela, dans les Aurès." },
   // Clubs qualifiés pour la Ligue des Champions 26/27 hors des 5 grands championnats
   // suivis par le site. Non affiliés à un championnat local ici : ils n'apparaissent
   // que lorsque le filtre "Ligue des Champions 26/27" est activé.
-  { name:"Estádio José Alvalade", city:"Lisbonne", country:"Portugal", flag:"country-pt", lat:38.7607, lon:-9.1607, capacity:50095, built:2003, league:null, desc:"Domicile du Sporting Clube de Portugal, dans le nord de Lisbonne.", competitions:["cl2627"] },
-  { name:"Estádio do Dragão", city:"Porto", country:"Portugal", flag:"country-pt", lat:41.1618, lon:-8.5832, capacity:50033, built:2003, league:null, desc:"Stade du FC Porto, construit pour l'Euro 2004 à l'emplacement de l'ancien Estádio das Antas.", competitions:["cl2627"] },
-  { name:"Jan Breydel Stadion", city:"Bruges", country:"Belgique", flag:"country-be", lat:51.1954, lon:3.1806, capacity:29062, built:1975, league:null, desc:"Domicile du Club Brugge, l'un des clubs les plus titrés de Belgique.", competitions:["cl2627"] },
   { name:"Philips Stadion", city:"Eindhoven", country:"Pays-Bas", flag:"country-nl", lat:51.4416, lon:5.4677, capacity:35000, built:1913, league:null, desc:"Stade du PSV Eindhoven, historiquement lié à l'entreprise Philips fondatrice du club.", competitions:["cl2627"] },
   { name:"De Kuip", city:"Rotterdam", country:"Pays-Bas", flag:"country-nl", lat:51.8944, lon:4.5231, capacity:47500, built:1937, league:null, desc:"Stade du Feyenoord Rotterdam, à l'architecture Art déco emblématique.", competitions:["cl2627"] },
   { name:"Aspmyra Stadion", city:"Bodø", country:"Norvège", flag:"country-no", lat:67.2921, lon:14.3897, capacity:8270, built:1968, league:null, desc:"Domicile du FK Bodø/Glimt, le stade de club le plus septentrional engagé en Ligue des Champions.", competitions:["cl2627"] },
@@ -2188,7 +2316,7 @@ function latLonToVector3(lat, lon, radius){
   return new THREE.Vector3(x, y, z);
 }
 
-const HIGHLIGHT_COUNTRIES = new Set(['France', 'United Kingdom', 'Spain', 'Germany', 'Italy']);
+const HIGHLIGHT_COUNTRIES = new Set(['France', 'United Kingdom', 'Spain', 'Germany', 'Italy', 'Belgium', 'Portugal', 'Switzerland', 'Morocco', 'Algeria']);
 const BORDER_RADIUS = EARTH_RADIUS * 1.004;
 const dimBorderMat = new THREE.LineBasicMaterial({ color:0xffffff, transparent:true, opacity:0.45 });
 const brightBorderMat = new THREE.LineBasicMaterial({ color:0xf4a100, transparent:true, opacity:1 });
@@ -2197,7 +2325,7 @@ const brightBorderMat = new THREE.LineBasicMaterial({ color:0xf4a100, transparen
 // partie des 5 grands championnats suivis (Portugal, Belgique, Pays-Bas,
 // Norvège, Ukraine, Turquie, Tchéquie, Slovaquie, Autriche, Azerbaïdjan,
 // Grèce). Leurs frontières sont surlignées en ambre au même titre que le Top 5.
-const CL_EXTRA_COUNTRIES = new Set(['Portugal', 'Belgium', 'Netherlands', 'Norway', 'Ukraine', 'Turkey', 'Czechia', 'Slovakia', 'Austria', 'Azerbaijan', 'Greece']);
+const CL_EXTRA_COUNTRIES = new Set(['Netherlands', 'Norway', 'Ukraine', 'Turkey', 'Czechia', 'Slovakia', 'Austria', 'Azerbaijan', 'Greece']);
 
 // Référence de chaque ligne de frontière par pays, pour pouvoir basculer sa
 // couleur dynamiquement (ex: activation du filtre Ligue des Champions).
@@ -2255,7 +2383,7 @@ if (THREE.sRGBEncoding) iconTexture.encoding = THREE.sRGBEncoding;
 
 const markers = [];
 const ICON_ASPECT = 577 / 416;
-const ICON_WIDTH = 0.026;
+const ICON_WIDTH = 0.020;
 const ICON_HEIGHT = ICON_WIDTH / ICON_ASPECT;
 const HIT_WIDTH = 0.05;
 const HIT_HEIGHT = HIT_WIDTH / ICON_ASPECT;
@@ -2279,6 +2407,106 @@ STADIUMS.forEach((s, idx) => {
 
   markers.push({ mesh: hit, icon: icon, phase: idx, baseScale: [ICON_WIDTH, ICON_HEIGHT] });
 });
+
+// ================= MARQUEURS PAYS (écran d'accueil) =================
+// Au chargement, on n'affiche pas directement les 184 stades : chaque pays
+// représenté est symbolisé par son drapeau + "Voir les stades". Un clic sur
+// ce drapeau révèle les stades de ce pays (et seulement ceux-ci).
+const COUNTRY_ISO = {
+  'France':'FR', 'Angleterre':'GB', 'Espagne':'ES', 'Allemagne':'DE', 'Italie':'IT',
+  'Belgique':'BE', 'Portugal':'PT', 'Suisse':'CH', 'Maroc':'MA', 'Algérie':'DZ',
+  'Pays-Bas':'NL', 'Norvège':'NO', 'Ukraine':'UA', 'Turquie':'TR', 'Tchéquie':'CZ',
+  'Slovaquie':'SK', 'Autriche':'AT', 'Azerbaïdjan':'AZ', 'Grèce':'GR'
+};
+function countryFlagEmoji(name){
+  const iso = COUNTRY_ISO[name];
+  if(!iso) return '⚽';
+  return iso.replace(/./g, c => String.fromCodePoint(127397 + c.charCodeAt(0)));
+}
+
+const revealedCountries = new Set();
+const countryMarkers = [];
+const COUNTRY_ICON_WIDTH = 0.11;
+const COUNTRY_ICON_HEIGHT = COUNTRY_ICON_WIDTH * (100/220);
+
+function makeCountryTexture(countryName){
+  const canvas = document.createElement('canvas');
+  canvas.width = 440; canvas.height = 200;
+  const ctx = canvas.getContext('2d');
+  const r = 26;
+  ctx.fillStyle = 'rgba(14,27,48,0.94)';
+  ctx.strokeStyle = 'rgba(244,161,0,0.55)';
+  ctx.lineWidth = 5;
+  ctx.beginPath();
+  ctx.moveTo(r,0);
+  ctx.arcTo(canvas.width,0,canvas.width,canvas.height,r);
+  ctx.arcTo(canvas.width,canvas.height,0,canvas.height,r);
+  ctx.arcTo(0,canvas.height,0,0,r);
+  ctx.arcTo(0,0,canvas.width,0,r);
+  ctx.closePath();
+  ctx.fill();
+  ctx.stroke();
+
+  ctx.textAlign = 'center';
+  ctx.font = '96px "Apple Color Emoji","Segoe UI Emoji","Noto Color Emoji",sans-serif';
+  ctx.fillText(countryFlagEmoji(countryName), canvas.width/2, 108);
+
+  ctx.fillStyle = '#F5F3EA';
+  ctx.font = '700 34px Oswald, sans-serif';
+  ctx.fillText(t('see_stadiums'), canvas.width/2, 168);
+
+  const tex = new THREE.CanvasTexture(canvas);
+  tex.needsUpdate = true;
+  return tex;
+}
+
+function buildCountryMarkers(){
+  countryMarkers.forEach(cm => { earthGroup.remove(cm.icon); earthGroup.remove(cm.hit); });
+  countryMarkers.length = 0;
+
+  const byCountry = {};
+  STADIUMS.forEach(s => {
+    if(!byCountry[s.country]) byCountry[s.country] = [];
+    byCountry[s.country].push(s);
+  });
+
+  Object.keys(byCountry).forEach((country, idx) => {
+    const list = byCountry[country];
+    const avgLat = list.reduce((sum, s) => sum + s.lat, 0) / list.length;
+    const avgLon = list.reduce((sum, s) => sum + s.lon, 0) / list.length;
+    const pos = latLonToVector3(avgLat, avgLon, EARTH_RADIUS * 1.02);
+
+    const mat = new THREE.SpriteMaterial({ map: makeCountryTexture(country), transparent:true, depthWrite:false });
+    const icon = new THREE.Sprite(mat);
+    icon.position.copy(pos);
+    icon.scale.set(COUNTRY_ICON_WIDTH, COUNTRY_ICON_HEIGHT, 1);
+    earthGroup.add(icon);
+
+    const hit = new THREE.Sprite(hitMat.clone());
+    hit.position.copy(pos);
+    hit.scale.set(COUNTRY_ICON_WIDTH, COUNTRY_ICON_HEIGHT, 1);
+    hit.userData = { country };
+    earthGroup.add(hit);
+
+    countryMarkers.push({ icon, mesh: hit, country, phase: idx });
+  });
+}
+buildCountryMarkers();
+
+function revealCountry(country){
+  if(revealedCountries.has(country)) return;
+  revealedCountries.add(country);
+  applyLeagueFilter();
+}
+
+function updateCountryMarkersVisibility(){
+  const visibleCountries = new Set(STADIUMS.filter(stadiumVisible).map(s => s.country));
+  countryMarkers.forEach(cm => {
+    const show = visibleCountries.has(cm.country) && !revealedCountries.has(cm.country);
+    cm.icon.visible = show;
+    cm.mesh.visible = show;
+  });
+}
 
 earthGroup.rotation.y = -1.2;
 earthGroup.rotation.x = 0.25;
@@ -2392,7 +2620,33 @@ function isMarkerFrontFacing(marker){
   return toMarker.dot(toCamera) > 0.08;
 }
 
+const COUNTRY_PICK_RADIUS = 60;
+
+function handleCountryPick(clientX, clientY){
+  let best = null;
+  let bestDist = Infinity;
+  countryMarkers.forEach(cm => {
+    if(!cm.mesh.visible) return;
+    if(!isMarkerFrontFacing(cm)) return;
+    const worldPos = new THREE.Vector3();
+    cm.mesh.getWorldPosition(worldPos);
+    const screen = projectToScreen(worldPos);
+    if(screen.behind) return;
+    const dist = Math.hypot(screen.x - clientX, screen.y - clientY);
+    if(dist <= COUNTRY_PICK_RADIUS && dist < bestDist){
+      bestDist = dist;
+      best = cm;
+    }
+  });
+  if(best){
+    revealCountry(best.country);
+    return true;
+  }
+  return false;
+}
+
 function handlePick(clientX, clientY){
+  if(handleCountryPick(clientX, clientY)) return;
   const nearby = [];
   markers.forEach(m => {
     if(!m.mesh.visible) return;
@@ -2498,7 +2752,12 @@ const LEAGUE_COLORS = {
   "Premier League": { color:"#B98BFF", border:"rgba(185,139,255,0.35)", bg:"rgba(185,139,255,0.1)" },
   "La Liga": { color:"#FF8A5C", border:"rgba(255,138,92,0.35)", bg:"rgba(255,138,92,0.1)" },
   "Serie A": { color:"#4ADE80", border:"rgba(74,222,128,0.35)", bg:"rgba(74,222,128,0.1)" },
-  "Bundesliga": { color:"#FF6B6B", border:"rgba(255,107,107,0.35)", bg:"rgba(255,107,107,0.1)" }
+  "Bundesliga": { color:"#FF6B6B", border:"rgba(255,107,107,0.35)", bg:"rgba(255,107,107,0.1)" },
+  "Jupiler Pro League": { color:"#FFD24C", border:"rgba(255,210,76,0.35)", bg:"rgba(255,210,76,0.1)" },
+  "Liga Portugal Betclic": { color:"#2FD9C4", border:"rgba(47,217,196,0.35)", bg:"rgba(47,217,196,0.1)" },
+  "Super League Suisse": { color:"#F45C7B", border:"rgba(244,92,123,0.35)", bg:"rgba(244,92,123,0.1)" },
+  "Botola Pro": { color:"#8CD867", border:"rgba(140,216,103,0.35)", bg:"rgba(140,216,103,0.1)" },
+  "Ligue 1 Algérie": { color:"#E85D75", border:"rgba(232,93,117,0.35)", bg:"rgba(232,93,117,0.1)" }
 };
 const DEFAULT_LEAGUE_COLOR = { color:"var(--amber)", border:"rgba(244,161,0,0.35)", bg:"rgba(244,161,0,0.08)" };
 
@@ -2597,7 +2856,7 @@ document.addEventListener('click', (e) => {
   }
 });
 
-const LEAGUE_ORDER = ["Ligue 1", "Premier League", "La Liga", "Serie A", "Bundesliga", "Brasileirão"];
+const LEAGUE_ORDER = ["Ligue 1", "Premier League", "La Liga", "Serie A", "Bundesliga", "Jupiler Pro League", "Liga Portugal Betclic", "Super League Suisse", "Botola Pro", "Ligue 1 Algérie", "Brasileirão"];
 const ALL_LEAGUES = LEAGUE_ORDER.filter(l => STADIUMS.some(s => s.league === l));
 let activeLeagues = new Set(ALL_LEAGUES);
 
@@ -2626,10 +2885,11 @@ function stadiumVisible(s){
 
 function applyLeagueFilter(){
   markers.forEach(m => {
-    const visible = stadiumVisible(m.mesh.userData);
+    const visible = stadiumVisible(m.mesh.userData) && revealedCountries.has(m.mesh.userData.country);
     m.icon.visible = visible;
     m.mesh.visible = visible;
   });
+  updateCountryMarkersVisibility();
   const badge = document.getElementById('filter-count-badge');
   const totalVisible = STADIUMS.filter(stadiumVisible).length;
   badge.textContent = totalVisible;
@@ -2857,10 +3117,12 @@ function setupRouteField(input, suggestionsEl, onSelect){
 
 setupRouteField(routeFromInput, routeFromSuggestions, (s) => {
   routeFromStadium = s;
+  if(s) revealCountry(s.country);
   updateRouteResult();
 });
 setupRouteField(routeToInput, routeToSuggestions, (s) => {
   routeToStadium = s;
+  if(s) revealCountry(s.country);
   updateRouteResult();
 });
 
@@ -2926,6 +3188,7 @@ function renderResults(matches){
     div.addEventListener('click', () => {
       searchInput.value = s.name;
       searchResults.classList.remove('open');
+      revealCountry(s.country);
       flyToStadium(s);
       openPanel(s);
     });
@@ -2956,6 +3219,7 @@ searchInput.addEventListener('keydown', (e) => {
       stadiumVisible(s) && (normalizeText(s.name).includes(q) || normalizeText(s.city).includes(q))
     );
     if(matches.length > 0){
+      revealCountry(matches[0].country);
       flyToStadium(matches[0]);
       openPanel(matches[0]);
       searchResults.classList.remove('open');
@@ -2982,6 +3246,12 @@ function animate(){
       targetRotation = null;
     }
   }
+  // Les icônes rétrécissent en vue générale (beaucoup de stades proches les
+  // uns des autres) et grossissent une fois qu'on zoome sur une région,
+  // pour garder un globe lisible même avec un grand nombre de stades.
+  const zoomFactor = Math.min(1, Math.max(0, (camera.position.z - 2.15) / (10 - 2.15)));
+  const zoomScale = 1.3 - zoomFactor * 0.7;
+
   markers.forEach((m, i) => {
     let s = 1 + Math.sin(t*2 + m.phase) * 0.045;
     if(m.pulseStart !== undefined){
@@ -2990,7 +3260,13 @@ function animate(){
         s += (1 - dt/0.6) * 0.5;
       }
     }
+    s *= zoomScale;
     m.icon.scale.set(m.baseScale[0] * s, m.baseScale[1] * s, 1);
+  });
+  countryMarkers.forEach(cm => {
+    if(!cm.icon.visible) return;
+    const s = (1 + Math.sin(t*1.6 + cm.phase) * 0.04) * Math.min(1.1, Math.max(0.7, zoomScale));
+    cm.icon.scale.set(COUNTRY_ICON_WIDTH * s, COUNTRY_ICON_HEIGHT * s, 1);
   });
   renderer.render(scene, camera);
 }
@@ -3159,7 +3435,12 @@ animate();
     'Premier League': 'gb',
     'La Liga': 'es',
     'Serie A': 'it',
-    'Bundesliga': 'de'
+    'Bundesliga': 'de',
+    'Jupiler Pro League': 'be',
+    'Liga Portugal Betclic': 'pt',
+    'Super League Suisse': 'ch',
+    'Botola Pro': 'ma',
+    'Ligue 1 Algérie': 'dz'
   };
 
   function buildLeagueMenu(){
