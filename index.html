@@ -226,6 +226,63 @@
     opacity:0;
     pointer-events:none;
   }
+  .country-prompt{
+    position:fixed;
+    top:100px;
+    left:50%;
+    transform:translateX(-50%) translateY(-10px);
+    z-index:60;
+    padding:14px 26px;
+    border-radius:14px;
+    background:rgba(14,27,48,0.96);
+    border:1px solid rgba(244,161,0,0.5);
+    box-shadow:0 14px 34px rgba(0,0,0,0.5);
+    color:var(--text);
+    font-family:'Oswald', sans-serif;
+    font-size:15px;
+    letter-spacing:0.3px;
+    text-align:center;
+    max-width:90vw;
+    opacity:0;
+    pointer-events:none;
+    transition:opacity 0.35s ease, transform 0.35s ease;
+  }
+  .country-prompt.show{
+    opacity:1;
+    transform:translateX(-50%) translateY(0);
+  }
+
+  .gu-toast{
+    position:fixed;
+    bottom:90px;
+    left:50%;
+    transform:translateX(-50%) translateY(10px);
+    z-index:170;
+    padding:12px 22px;
+    border-radius:12px;
+    background:rgba(14,27,48,0.97);
+    border:1px solid rgba(244,161,0,0.5);
+    box-shadow:0 14px 34px rgba(0,0,0,0.5);
+    color:var(--text);
+    font-family:'Oswald', sans-serif;
+    font-size:14px;
+    text-align:center;
+    max-width:90vw;
+    opacity:0;
+    pointer-events:none;
+    transition:opacity 0.3s ease, transform 0.3s ease;
+  }
+  .gu-toast.show{
+    opacity:1;
+    transform:translateX(-50%) translateY(0);
+  }
+
+  .filter-toggle.locked, .quiz-toggle.locked{
+    opacity:0.45;
+    cursor:not-allowed;
+    filter:grayscale(0.6);
+  }
+
   .donate-btn{
     position:fixed;
     bottom:68px;
@@ -1715,6 +1772,10 @@ fr: {
   donate_text:"Chaque don, c'est un peu comme une passe décisive : ça fait avancer Globe Ultras vers le prochain but. Un immense merci pour votre soutien !",
   donate_confirm:"Faire un don sur Ko-fi",
   see_stadiums:"Voir les stades",
+  choose_country_prompt:"Choisis un pays parmi les drapeaux pour commencer 🌍",
+  stadiums_to_unlock:"stades à visiter",
+  country_unlocked_toast:"débloqué !",
+  feature_locked_toast:"Débloque tous les pays pour accéder à cette fonctionnalité",
   word_back:"Retour", word_categories:"Catégories",
   championnats:"Championnats", competitions:"Compétitions", itineraire:"Itinéraire",
   tout:"Tout", depart:"Départ", arrivee:"Arrivée",
@@ -1775,6 +1836,10 @@ en: {
   donate_text:"A donation is like a perfect assist — it helps push Globe Ultras toward the next goal. Thank you so much for your support!",
   donate_confirm:"Donate on Ko-fi",
   see_stadiums:"See the stadiums",
+  choose_country_prompt:"Choose a country from the flags to get started 🌍",
+  stadiums_to_unlock:"stadiums to visit",
+  country_unlocked_toast:"unlocked!",
+  feature_locked_toast:"Unlock every country to access this feature",
   word_back:"Back", word_categories:"Categories",
   championnats:"Leagues", competitions:"Competitions", itineraire:"Route",
   tout:"All", depart:"From", arrivee:"To",
@@ -1835,6 +1900,10 @@ it: {
   donate_text:"Una donazione è come un assist perfetto: aiuta Globe Ultras a segnare il prossimo gol. Grazie di cuore per il tuo sostegno!",
   donate_confirm:"Fai una donazione su Ko-fi",
   see_stadiums:"Vedi gli stadi",
+  choose_country_prompt:"Scegli un paese tra le bandiere per iniziare 🌍",
+  stadiums_to_unlock:"stadi da visitare",
+  country_unlocked_toast:"sbloccato!",
+  feature_locked_toast:"Sblocca tutti i paesi per accedere a questa funzione",
   word_back:"Indietro", word_categories:"Categorie",
   championnats:"Campionati", competitions:"Competizioni", itineraire:"Itinerario",
   tout:"Tutti", depart:"Partenza", arrivee:"Arrivo",
@@ -1895,6 +1964,10 @@ es: {
   donate_text:"Una donación es como una asistencia perfecta: ayuda a Globe Ultras a acercarse al próximo gol. ¡Muchísimas gracias por tu apoyo!",
   donate_confirm:"Donar en Ko-fi",
   see_stadiums:"Ver los estadios",
+  choose_country_prompt:"Elige un país entre las banderas para empezar 🌍",
+  stadiums_to_unlock:"estadios por visitar",
+  country_unlocked_toast:"¡desbloqueado!",
+  feature_locked_toast:"Desbloquea todos los países para acceder a esta función",
   word_back:"Volver", word_categories:"Categorías",
   championnats:"Ligas", competitions:"Competiciones", itineraire:"Ruta",
   tout:"Todos", depart:"Salida", arrivee:"Llegada",
@@ -1955,6 +2028,10 @@ de: {
   donate_text:"Eine Spende ist wie eine perfekte Vorlage: Sie bringt Globe Ultras dem nächsten Tor näher. Vielen Dank für deine Unterstützung!",
   donate_confirm:"Auf Ko-fi spenden",
   see_stadiums:"Stadien anzeigen",
+  choose_country_prompt:"Wähle ein Land unter den Flaggen, um zu starten 🌍",
+  stadiums_to_unlock:"Stadien zu besuchen",
+  country_unlocked_toast:"freigeschaltet!",
+  feature_locked_toast:"Schalte alle Länder frei, um auf diese Funktion zuzugreifen",
   word_back:"Zurück", word_categories:"Kategorien",
   championnats:"Ligen", competitions:"Wettbewerbe", itineraire:"Route",
   tout:"Alle", depart:"Start", arrivee:"Ziel",
@@ -2425,6 +2502,147 @@ const COUNTRY_ISO = {
 };
 
 const revealedCountries = new Set();
+
+// ================= PROGRESSION PAR PAYS =================
+// Le premier pays est choisi librement par le joueur ("Choisis un pays").
+// Les suivants se débloquent automatiquement au fur et à mesure que des
+// stades sont visités (cliqués/consultés) : 10 stades pour le 2e pays,
+// 20 pour le 3e, 30 pour le 4e, etc. Tant que tous les pays ne sont pas
+// débloqués, Championnats / Compétitions / Itinéraire restent verrouillés.
+const COUNTRY_ORDER = (function(){
+  const seen = new Set();
+  const order = [];
+  STADIUMS.forEach(s => { if(!seen.has(s.country)){ seen.add(s.country); order.push(s.country); } });
+  return order;
+})();
+
+function loadProgress(){
+  try {
+    return {
+      visited: new Set(JSON.parse(localStorage.getItem('gu_visited') || '[]')),
+      firstCountry: localStorage.getItem('gu_first_country') || null
+    };
+  } catch(e){
+    return { visited: new Set(), firstCountry: null };
+  }
+}
+const _guProgress = loadProgress();
+const visitedStadiums = _guProgress.visited;
+let firstCountry = _guProgress.firstCountry;
+
+function saveProgress(){
+  try {
+    localStorage.setItem('gu_visited', JSON.stringify([...visitedStadiums]));
+    if(firstCountry) localStorage.setItem('gu_first_country', firstCountry);
+  } catch(e){}
+}
+
+function unlockOrderForRemaining(){
+  return COUNTRY_ORDER.filter(c => c !== firstCountry);
+}
+
+function computeUnlockedCountries(){
+  const unlocked = new Set();
+  if(!firstCountry) return unlocked;
+  unlocked.add(firstCountry);
+  const remaining = unlockOrderForRemaining();
+  const visitedCount = visitedStadiums.size;
+  for(let i = 0; i < remaining.length; i++){
+    const threshold = (i + 1) * 10;
+    if(visitedCount >= threshold){
+      unlocked.add(remaining[i]);
+    } else {
+      break;
+    }
+  }
+  return unlocked;
+}
+
+function remainingToUnlock(country){
+  if(!firstCountry) return null;
+  const remaining = unlockOrderForRemaining();
+  const idx = remaining.indexOf(country);
+  if(idx === -1) return null;
+  const threshold = (idx + 1) * 10;
+  return Math.max(0, threshold - visitedStadiums.size);
+}
+
+function allCountriesUnlocked(){
+  return !!firstCountry && computeUnlockedCountries().size >= COUNTRY_ORDER.length;
+}
+
+function showToast(message){
+  let el = document.getElementById('gu-toast');
+  if(!el){
+    el = document.createElement('div');
+    el.id = 'gu-toast';
+    el.className = 'gu-toast';
+    document.body.appendChild(el);
+  }
+  el.textContent = message;
+  el.classList.add('show');
+  clearTimeout(el._hideTimer);
+  el._hideTimer = setTimeout(() => el.classList.remove('show'), 3200);
+}
+
+function showCountryPrompt(){
+  if(firstCountry) return;
+  let el = document.getElementById('country-prompt');
+  if(!el){
+    el = document.createElement('div');
+    el.id = 'country-prompt';
+    el.className = 'country-prompt';
+    document.body.appendChild(el);
+  }
+  el.textContent = t('choose_country_prompt');
+  el.classList.add('show');
+}
+function hideCountryPrompt(){
+  const el = document.getElementById('country-prompt');
+  if(el) el.classList.remove('show');
+}
+
+function updateFeatureLocks(){
+  const locked = !allCountriesUnlocked();
+  [filterToggleGlobal, compToggleGlobal, routeToggleGlobal].forEach(el => {
+    if(el) el.classList.toggle('locked', locked);
+  });
+}
+let filterToggleGlobal = null, compToggleGlobal = null, routeToggleGlobal = null;
+
+function chooseFirstCountry(country){
+  if(firstCountry) return;
+  firstCountry = country;
+  saveProgress();
+  hideCountryPrompt();
+  syncProgress();
+}
+
+function markStadiumVisited(s){
+  const key = s.name + '|' + s.city;
+  const before = computeUnlockedCountries();
+  if(!visitedStadiums.has(key)){
+    visitedStadiums.add(key);
+    saveProgress();
+  }
+  const after = computeUnlockedCountries();
+  if(after.size > before.size){
+    let newlyUnlocked = null;
+    after.forEach(c => { if(!before.has(c)) newlyUnlocked = c; });
+    if(newlyUnlocked){
+      showToast('🎉 ' + tCountry(newlyUnlocked) + ' ' + t('country_unlocked_toast'));
+    }
+  }
+  syncProgress();
+}
+
+function syncProgress(){
+  revealedCountries.clear();
+  computeUnlockedCountries().forEach(c => revealedCountries.add(c));
+  if(typeof applyLeagueFilter === 'function') applyLeagueFilter();
+  updateFeatureLocks();
+}
+
 const countryMarkers = [];
 const COUNTRY_ICON_WIDTH = 0.11;
 const COUNTRY_ICON_HEIGHT = COUNTRY_ICON_WIDTH * (304/440);
@@ -2503,6 +2721,32 @@ function drawCountryCard(ctx, countryName, time){
   }
   ctx.restore();
 
+  const locked = !!firstCountry && !revealedCountries.has(countryName);
+
+  if(locked){
+    // Hachures diagonales par-dessus le drapeau pour indiquer "verrouillé"
+    ctx.save();
+    ctx.beginPath();
+    ctx.rect(0, 0, w, fh);
+    ctx.clip();
+    ctx.fillStyle = 'rgba(3,7,16,0.6)';
+    ctx.fillRect(0, 0, w, fh);
+    ctx.strokeStyle = 'rgba(255,255,255,0.3)';
+    ctx.lineWidth = 7;
+    ctx.beginPath();
+    for(let x = -fh; x < w + fh; x += 24){
+      ctx.moveTo(x, 0);
+      ctx.lineTo(x + fh, fh);
+    }
+    ctx.stroke();
+    ctx.restore();
+
+    // Petit cadenas au centre du drapeau verrouillé
+    ctx.textAlign = 'center';
+    ctx.font = '54px "Apple Color Emoji","Segoe UI Emoji","Noto Color Emoji",sans-serif';
+    ctx.fillText('🔒', w/2, fh/2 + 18);
+  }
+
   // Fine ligne de séparation entre le drapeau et le bandeau de texte
   ctx.strokeStyle = 'rgba(244,161,0,0.35)';
   ctx.lineWidth = 2;
@@ -2514,10 +2758,18 @@ function drawCountryCard(ctx, countryName, time){
   // ---- Bandeau de texte (partie basse), dans le style du titre du site ----
   ctx.textAlign = 'center';
   ctx.fillStyle = '#F5F3EA';
-  ctx.font = '400 42px "Bebas Neue", sans-serif';
-  try { ctx.letterSpacing = '2px'; } catch(e){}
-  ctx.fillText(t('see_stadiums').toUpperCase(), w/2, fh + COUNTRY_TEXT_H/2 + 15);
-  try { ctx.letterSpacing = '0px'; } catch(e){}
+  if(locked){
+    const remaining = remainingToUnlock(countryName);
+    ctx.font = '400 32px "Bebas Neue", sans-serif';
+    try { ctx.letterSpacing = '1px'; } catch(e){}
+    ctx.fillText((remaining !== null ? remaining : '?') + ' ' + t('stadiums_to_unlock').toUpperCase(), w/2, fh + COUNTRY_TEXT_H/2 + 12);
+    try { ctx.letterSpacing = '0px'; } catch(e){}
+  } else {
+    ctx.font = '400 42px "Bebas Neue", sans-serif';
+    try { ctx.letterSpacing = '2px'; } catch(e){}
+    ctx.fillText(t('see_stadiums').toUpperCase(), w/2, fh + COUNTRY_TEXT_H/2 + 15);
+    try { ctx.letterSpacing = '0px'; } catch(e){}
+  }
 
   ctx.restore();
 
@@ -2571,12 +2823,6 @@ function buildCountryMarkers(){
   });
 }
 buildCountryMarkers();
-
-function revealCountry(country){
-  if(revealedCountries.has(country)) return;
-  revealedCountries.add(country);
-  applyLeagueFilter();
-}
 
 function updateCountryMarkersVisibility(){
   const visibleCountries = new Set(STADIUMS.filter(stadiumVisible).map(s => s.country));
@@ -2718,7 +2964,9 @@ function handleCountryPick(clientX, clientY){
     }
   });
   if(best){
-    revealCountry(best.country);
+    if(!firstCountry){
+      chooseFirstCountry(best.country);
+    }
     return true;
   }
   return false;
@@ -2881,6 +3129,7 @@ function loadStadiumPhoto(s){
 }
 
 function openPanel(s){
+  markStadiumVisited(s);
   const leagueBadge = document.getElementById('p-league');
   const leagueLabel = s.league
     ? s.league.toUpperCase()
@@ -3053,13 +3302,17 @@ function buildCompPanel(){
 buildFilterPanel();
 buildCompPanel();
 applyLeagueFilter();
+filterToggleGlobal = filterToggle;
+compToggleGlobal = compToggle;
 
 filterToggle.addEventListener('click', () => {
+  if(!allCountriesUnlocked()){ showToast(t('feature_locked_toast')); return; }
   filterToggle.classList.toggle('open');
   filterPanel.classList.toggle('open');
 });
 
 compToggle.addEventListener('click', () => {
+  if(!allCountriesUnlocked()){ showToast(t('feature_locked_toast')); return; }
   compToggle.classList.toggle('open');
   compPanel.classList.toggle('open');
 });
@@ -3089,8 +3342,11 @@ const routeClearBtn = document.getElementById('route-clear');
 let routeFromStadium = null;
 let routeToStadium = null;
 let routeArcLine = null;
+routeToggleGlobal = routeToggle;
+syncProgress();
 
 routeToggle.addEventListener('click', () => {
+  if(!allCountriesUnlocked()){ showToast(t('feature_locked_toast')); return; }
   routeToggle.classList.toggle('open');
   routePanel.classList.toggle('open');
 });
@@ -3196,12 +3452,12 @@ function setupRouteField(input, suggestionsEl, onSelect){
 
 setupRouteField(routeFromInput, routeFromSuggestions, (s) => {
   routeFromStadium = s;
-  if(s) revealCountry(s.country);
+  if(s) markStadiumVisited(s);
   updateRouteResult();
 });
 setupRouteField(routeToInput, routeToSuggestions, (s) => {
   routeToStadium = s;
-  if(s) revealCountry(s.country);
+  if(s) markStadiumVisited(s);
   updateRouteResult();
 });
 
@@ -3267,7 +3523,6 @@ function renderResults(matches){
     div.addEventListener('click', () => {
       searchInput.value = s.name;
       searchResults.classList.remove('open');
-      revealCountry(s.country);
       flyToStadium(s);
       openPanel(s);
     });
@@ -3298,7 +3553,6 @@ searchInput.addEventListener('keydown', (e) => {
       stadiumVisible(s) && (normalizeText(s.name).includes(q) || normalizeText(s.city).includes(q))
     );
     if(matches.length > 0){
-      revealCountry(matches[0].country);
       flyToStadium(matches[0]);
       openPanel(matches[0]);
       searchResults.classList.remove('open');
@@ -3836,6 +4090,7 @@ animate();
     cardEl.remove();
     skipBtn.remove();
     window.removeEventListener('resize', onResize);
+    showCountryPrompt();
   }
 
   function onResize(){
@@ -3874,6 +4129,10 @@ function translatePage(){
   document.querySelectorAll('[data-i18n-aria]').forEach(el => {
     el.setAttribute('aria-label', t(el.getAttribute('data-i18n-aria')));
   });
+  const countryPromptEl = document.getElementById('country-prompt');
+  if(countryPromptEl && countryPromptEl.classList.contains('show')){
+    countryPromptEl.textContent = t('choose_country_prompt');
+  }
 
   const leagueMenuTitle = document.getElementById('quiz-league-menu-title');
   if(leagueMenuTitle){
