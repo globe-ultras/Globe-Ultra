@@ -9,19 +9,37 @@
 <meta name="keywords" content="stades de football, globe interactif, Ligue 1, Premier League, Liga, Serie A, Bundesliga, Ligue des Champions, quiz football, carte des stades">
 <meta name="author" content="Globe Ultras">
 <link rel="canonical" href="https://globe-ultras.github.io/Globe-Ultra/">
-<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%23071021'/%3E%3Ccircle cx='32' cy='34' r='19' fill='%23F5F3EA'/%3E%3Cpath d='M32 19 L39.4 24.4 L36.6 33.1 L27.4 33.1 L24.6 24.4 Z' fill='%230E1B30'/%3E%3Cline x1='32' y1='19' x2='30' y2='9' stroke='%23F4A100' stroke-width='4' stroke-linecap='round'/%3E%3C/svg%3E">
+<link rel="icon" type="image/png" sizes="512x512" href="favicon-512.png">
+<link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png">
+<link rel="apple-touch-icon" href="favicon-180.png">
 
 <!-- Open Graph (aperçus sur réseaux sociaux, TikTok, etc.) -->
 <meta property="og:type" content="website">
+<meta property="og:site_name" content="Globe Ultras">
 <meta property="og:title" content="Globe Ultras — Explorez les stades de football du monde en 3D">
 <meta property="og:description" content="Un globe terrestre 3D interactif avec plus de 100 stades de football à travers le monde. Recherche, itinéraire, quiz et plus encore.">
 <meta property="og:url" content="https://globe-ultras.github.io/Globe-Ultra/">
+<meta property="og:image" content="https://globe-ultras.github.io/Globe-Ultra/favicon-512.png">
 <meta property="og:locale" content="fr_FR">
 
 <!-- Twitter / X Card -->
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Globe Ultras — Explorez les stades de football du monde en 3D">
 <meta name="twitter:description" content="Un globe terrestre 3D interactif avec plus de 100 stades de football à travers le monde.">
+
+<!-- Données structurées : aide Google à afficher "Globe Ultras" comme nom
+     du site (au lieu de deviner "GitHub Pages documentation") -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebSite",
+  "name": "Globe Ultras",
+  "alternateName": "Globe Ultras — Stades du monde",
+  "url": "https://globe-ultras.github.io/Globe-Ultra/",
+  "description": "Un globe terrestre 3D interactif présentant plus de 100 stades de football à travers le monde.",
+  "image": "https://globe-ultras.github.io/Globe-Ultra/favicon-512.png"
+}
+</script>
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Oswald:wght@400;500;600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
@@ -2512,7 +2530,15 @@ const revealedCountries = new Set();
 const COUNTRY_ORDER = (function(){
   const seen = new Set();
   const order = [];
-  STADIUMS.forEach(s => { if(!seen.has(s.country)){ seen.add(s.country); order.push(s.country); } });
+  // On ne compte ici que les pays d'un vrai championnat suivi par le site
+  // (league non nul). Les pays qui n'ont qu'un ou deux clubs isolés
+  // "Ligue des Champions" (Pays-Bas, Norvège...) n'ont pas de drapeau
+  // visible par défaut : les inclure rendrait le déblocage complet
+  // impossible à atteindre.
+  STADIUMS.forEach(s => {
+    if(!s.league) return;
+    if(!seen.has(s.country)){ seen.add(s.country); order.push(s.country); }
+  });
   return order;
 })();
 
@@ -2554,6 +2580,14 @@ function computeUnlockedCountries(){
     } else {
       break;
     }
+  }
+  // Les pays "bonus" qui n'ont qu'un ou deux clubs isolés hors des grands
+  // championnats (Pays-Bas, Norvège...) ne font pas partie de la
+  // progression : ils ne sont de toute façon visibles qu'une fois le
+  // filtre Compétitions débloqué, donc on les considère accessibles dès
+  // qu'un premier pays a été choisi, sans étape de déblocage à part.
+  if(unlocked.size >= COUNTRY_ORDER.length){
+    STADIUMS.forEach(s => { if(!s.league) unlocked.add(s.country); });
   }
   return unlocked;
 }
