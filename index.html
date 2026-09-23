@@ -1625,6 +1625,9 @@ const BALL_ICON = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAiUAAAIlCAYAAAA
       ctx.fill();
     }
   }
+  // Exposée globalement pour être réutilisée par les marqueurs de pays
+  // du globe (autre bloc <script>, qui n'a pas accès à cette fermeture).
+  window.drawFlagStripes = drawFlagStripes;
 
   function drawFlagBadge(ctx, code, x, y, size, alpha){
     const w = size, h = size * 0.68;
@@ -2412,52 +2415,122 @@ STADIUMS.forEach((s, idx) => {
 // Au chargement, on n'affiche pas directement les 184 stades : chaque pays
 // représenté est symbolisé par son drapeau + "Voir les stades". Un clic sur
 // ce drapeau révèle les stades de ce pays (et seulement ceux-ci).
+// On réutilise le système de drapeaux dessinés au pinceau (drawFlagStripes,
+// déjà utilisé pour les ballons du quiz) plutôt que des emojis de drapeaux :
+// ces derniers ne s'affichent pas de façon fiable selon les navigateurs et
+// systèmes d'exploitation (notamment sous Windows).
 const COUNTRY_ISO = {
-  'France':'FR', 'Angleterre':'GB', 'Espagne':'ES', 'Allemagne':'DE', 'Italie':'IT',
-  'Belgique':'BE', 'Portugal':'PT', 'Suisse':'CH', 'Maroc':'MA', 'Algérie':'DZ',
-  'Pays-Bas':'NL', 'Norvège':'NO', 'Ukraine':'UA', 'Turquie':'TR', 'Tchéquie':'CZ',
-  'Slovaquie':'SK', 'Autriche':'AT', 'Azerbaïdjan':'AZ', 'Grèce':'GR'
+  'France':'fr', 'Angleterre':'gb', 'Espagne':'es', 'Allemagne':'de', 'Italie':'it',
+  'Belgique':'be', 'Portugal':'pt', 'Suisse':'ch', 'Maroc':'ma', 'Algérie':'dz'
 };
-function countryFlagEmoji(name){
-  const iso = COUNTRY_ISO[name];
-  if(!iso) return '⚽';
-  return iso.replace(/./g, c => String.fromCodePoint(127397 + c.charCodeAt(0)));
-}
 
 const revealedCountries = new Set();
 const countryMarkers = [];
 const COUNTRY_ICON_WIDTH = 0.11;
-const COUNTRY_ICON_HEIGHT = COUNTRY_ICON_WIDTH * (100/220);
+const COUNTRY_ICON_HEIGHT = COUNTRY_ICON_WIDTH * (304/440);
 
-function makeCountryTexture(countryName){
-  const canvas = document.createElement('canvas');
-  canvas.width = 440; canvas.height = 200;
-  const ctx = canvas.getContext('2d');
-  const r = 26;
+// Drapeau pré-rendu à plat une seule fois par pays (mis en cache), qu'on
+// va ensuite "découper" en fines lamelles verticales à chaque image pour
+// simuler un tissu qui ondule au vent (technique classique canvas).
+const FLAT_FLAG_CACHE = {};
+function getFlatFlag(code){
+  if(FLAT_FLAG_CACHE[code]) return FLAT_FLAG_CACHE[code];
+  const w = 300, h = 200;
+  const c = document.createElement('canvas');
+  c.width = w; c.height = h;
+  const ctx = c.getContext('2d');
+  ctx.save();
+  ctx.translate(w/2, h/2);
+  drawFlagStripes(ctx, code, w, h);
+  ctx.restore();
+  const entry = { canvas:c, w, h };
+  FLAT_FLAG_CACHE[code] = entry;
+  return entry;
+}
+
+const COUNTRY_CARD_W = 440, COUNTRY_FLAG_H = 220, COUNTRY_TEXT_H = 84;
+const COUNTRY_CARD_H = COUNTRY_FLAG_H + COUNTRY_TEXT_H;
+const FLAG_WAVE_SLICES = 40;
+
+function drawCountryCard(ctx, countryName, time){
+  const w = COUNTRY_CARD_W, h = COUNTRY_CARD_H, fh = COUNTRY_FLAG_H, r = 26;
+  ctx.clearRect(0, 0, w, h);
+
+  // Contour arrondi englobant toute la carte (drapeau + bandeau de texte)
+  ctx.save();
+  ctx.beginPath();
+  ctx.moveTo(r,0);
+  ctx.arcTo(w,0,w,h,r);
+  ctx.arcTo(w,h,0,h,r);
+  ctx.arcTo(0,h,0,0,r);
+  ctx.arcTo(0,0,w,0,r);
+  ctx.closePath();
+  ctx.clip();
+
   ctx.fillStyle = 'rgba(14,27,48,0.94)';
-  ctx.strokeStyle = 'rgba(244,161,0,0.55)';
+  ctx.fillRect(0, 0, w, h);
+
+  // ---- Zone drapeau (partie haute uniquement) ----
+  ctx.save();
+  ctx.beginPath();
+  ctx.rect(0, 0, w, fh);
+  ctx.clip();
+
+  const code = COUNTRY_ISO[countryName];
+  if(code){
+    // Le drapeau remplit toute la zone haute, découpé en fines bandes
+    // verticales décalées par une onde sinusoïdale : effet "vent".
+    const flat = getFlatFlag(code);
+    const sliceW = w / FLAG_WAVE_SLICES;
+    for(let i = 0; i < FLAG_WAVE_SLICES; i++){
+      const sx = (i / FLAG_WAVE_SLICES) * flat.w;
+      const sw = flat.w / FLAG_WAVE_SLICES + 1;
+      const dx = i * sliceW;
+      // L'amplitude est nulle sur le bord gauche ("hampe" du drapeau) et
+      // maximale à droite, comme un vrai drapeau flottant au vent.
+      const edgeFactor = i / FLAG_WAVE_SLICES;
+      const amp = fh * 0.08 * edgeFactor;
+      const wave = Math.sin(time * 2.1 + i * 0.5) * amp;
+      ctx.drawImage(flat.canvas, sx, 0, sw, flat.h, dx - 1, wave, sliceW + 2, fh);
+    }
+  } else {
+    // Pays sans drapeau dessiné (clubs "Ligue des Champions" hors grands
+    // championnats) : on retombe sur un ballon, emoji universel fiable
+    // partout, plutôt qu'un drapeau qui pourrait ne pas s'afficher.
+    ctx.textAlign = 'center';
+    ctx.font = '110px "Apple Color Emoji","Segoe UI Emoji","Noto Color Emoji",sans-serif';
+    ctx.fillText('⚽', w/2, fh/2 + 36);
+  }
+  ctx.restore();
+
+  // Fine ligne de séparation entre le drapeau et le bandeau de texte
+  ctx.strokeStyle = 'rgba(244,161,0,0.35)';
+  ctx.lineWidth = 2;
+  ctx.beginPath();
+  ctx.moveTo(0, fh);
+  ctx.lineTo(w, fh);
+  ctx.stroke();
+
+  // ---- Bandeau de texte (partie basse), dans le style du titre du site ----
+  ctx.textAlign = 'center';
+  ctx.fillStyle = '#F5F3EA';
+  ctx.font = '400 42px "Bebas Neue", sans-serif';
+  try { ctx.letterSpacing = '2px'; } catch(e){}
+  ctx.fillText(t('see_stadiums').toUpperCase(), w/2, fh + COUNTRY_TEXT_H/2 + 15);
+  try { ctx.letterSpacing = '0px'; } catch(e){}
+
+  ctx.restore();
+
+  ctx.strokeStyle = 'rgba(244,161,0,0.6)';
   ctx.lineWidth = 5;
   ctx.beginPath();
   ctx.moveTo(r,0);
-  ctx.arcTo(canvas.width,0,canvas.width,canvas.height,r);
-  ctx.arcTo(canvas.width,canvas.height,0,canvas.height,r);
-  ctx.arcTo(0,canvas.height,0,0,r);
-  ctx.arcTo(0,0,canvas.width,0,r);
+  ctx.arcTo(w,0,w,h,r);
+  ctx.arcTo(w,h,0,h,r);
+  ctx.arcTo(0,h,0,0,r);
+  ctx.arcTo(0,0,w,0,r);
   ctx.closePath();
-  ctx.fill();
   ctx.stroke();
-
-  ctx.textAlign = 'center';
-  ctx.font = '96px "Apple Color Emoji","Segoe UI Emoji","Noto Color Emoji",sans-serif';
-  ctx.fillText(countryFlagEmoji(countryName), canvas.width/2, 108);
-
-  ctx.fillStyle = '#F5F3EA';
-  ctx.font = '700 34px Oswald, sans-serif';
-  ctx.fillText(t('see_stadiums'), canvas.width/2, 168);
-
-  const tex = new THREE.CanvasTexture(canvas);
-  tex.needsUpdate = true;
-  return tex;
 }
 
 function buildCountryMarkers(){
@@ -2476,7 +2549,13 @@ function buildCountryMarkers(){
     const avgLon = list.reduce((sum, s) => sum + s.lon, 0) / list.length;
     const pos = latLonToVector3(avgLat, avgLon, EARTH_RADIUS * 1.02);
 
-    const mat = new THREE.SpriteMaterial({ map: makeCountryTexture(country), transparent:true, depthWrite:false });
+    const canvas = document.createElement('canvas');
+    canvas.width = COUNTRY_CARD_W; canvas.height = COUNTRY_CARD_H;
+    const ctx = canvas.getContext('2d');
+    drawCountryCard(ctx, country, idx * 0.7);
+    const texture = new THREE.CanvasTexture(canvas);
+
+    const mat = new THREE.SpriteMaterial({ map: texture, transparent:true, depthWrite:false });
     const icon = new THREE.Sprite(mat);
     icon.position.copy(pos);
     icon.scale.set(COUNTRY_ICON_WIDTH, COUNTRY_ICON_HEIGHT, 1);
@@ -2488,7 +2567,7 @@ function buildCountryMarkers(){
     hit.userData = { country };
     earthGroup.add(hit);
 
-    countryMarkers.push({ icon, mesh: hit, country, phase: idx });
+    countryMarkers.push({ icon, mesh: hit, country, phase: idx, canvas, ctx, texture, wavePhase: idx * 0.7 });
   });
 }
 buildCountryMarkers();
@@ -3267,6 +3346,10 @@ function animate(){
     if(!cm.icon.visible) return;
     const s = (1 + Math.sin(t*1.6 + cm.phase) * 0.04) * Math.min(1.1, Math.max(0.7, zoomScale));
     cm.icon.scale.set(COUNTRY_ICON_WIDTH * s, COUNTRY_ICON_HEIGHT * s, 1);
+    // Effet de drapeau qui ondule au vent : on redessine la texture avec
+    // un décalage d'onde qui avance dans le temps.
+    drawCountryCard(cm.ctx, cm.country, t + cm.wavePhase);
+    cm.texture.needsUpdate = true;
   });
   renderer.render(scene, camera);
 }
